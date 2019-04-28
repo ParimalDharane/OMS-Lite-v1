@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="favicon.ico">
+
+    <title>Order Management System - Lite</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="vendor/bootstrap-4.0.0-dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="vendor/toaster/toaster.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="dashboard.css" rel="stylesheet">
+</head>
+
+<body ng-app="OMSLiteApp" ng-controller="MainController">
+
+    <nav class="navbar navbar-dark bg-dark navbar-expand-lg">
+        <a class="navbar-brand" href="#">OMS Lite</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="#">Order Book <span class="sr-only">(current)</span></a>
+                </li>
+            </ul>           
+        </div>
+    </nav>
+    <div class="">
+        <div class="">
+            <div ng-include="'components/omslite/omsliteContainerView.html'"></div>
+        </div>
+    </div>
+
+    <script src="vendor/jquery/jquery-3.3.1.min.js"></script>
+    <script src="vendor/jquery/popper.min.js"></script>
+    <script src="vendor/bootstrap-4.0.0-dist/js/bootstrap.min.js"></script>
+    <script src="vendor/angularjs-1.7.8/angular.min.js"></script>
+    <script src="vendor/toaster/toaster.js"></script>
+    <script src="vendor/jquery/feather.min.js"></script>
+    <script>
+        feather.replace()
+    </script>
+    <script src="app.js"></script>
+    <script src="components/omslite/omsliteService.js"></script>
+    <script src="components/omslite/omsliteController.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,188 @@
+<div class="mb-2 mt-1">
+  <div class="bg-light mb-2 pt-2 pb-2" id="topActionBar">
+    <a class="btn btn-primary btn-sm ml-2" href="#" role="button" data-toggle="modal"
+      data-target="#orderbookEntryModal">
+      Add Orderbook...
+    </a>
+    <!-- Button trigger modal -->
+    <button type="button" class="btn btn-secondary btn-sm ml-2" ng-disabled="!orderEntryFlag" data-toggle="modal"
+      data-target="#orderEntryModal">
+      Add Order...
+    </button>
+    <!-- Button trigger modal -->
+    <button type="button" class="btn btn-secondary btn-sm ml-2" ng-disabled="!executionEntryFlag" data-toggle="modal"
+      data-target="#executionEntryModel">
+      Add Execution...
+    </button>
+  </div>
+  <div class="">
+    <div class="row" id="bookSelectionBar">
+      <label for="orderbookCombo" class="col-form-label ml-4">Instrument Name:</label>
+      <select class="col-sm-2 ml-2" ng-model="selectedBook" ng-options="x.instrumentName for x in orderbookList"
+        ng-change="orderbookChanged(selectedBook)" id="orderbookCombo">
+      </select>
+
+      <button type="button" ng-click="closeOrderbook(selectedBook)" class="btn btn-secondary btn-sm ml-2"
+        ng-disabled="!orderbookCloseFlag">
+        Close Orderbook
+      </button>
+      <!-- Button trigger modal -->
+      <button type="button" ng-click="loadOrderbookStats()" class="btn btn-secondary btn-sm ml-2">
+        Refresh
+      </button>
+      <div ng-include="'components/partials/orderbookEntry.html'"></div>
+      <div ng-include="'components/partials/orderEntry.html'"></div>
+      <div ng-include="'components/partials/executionEntry.html'"></div>
+      <span class="badge badge-pill badge-info float-right mb-2 mr-2" title="Record count">{{orderList.length}}</span>
+      <div class="loading-container" ng-show="loadingCount">
+        <img src="img/loading1.gif" style="width:40px;height:40px;" alt="Loading Data...">
+      </div>
+    </div>
+    <div class="mt-2 pl-1 pr-1">
+      <table class="table table-condensed table-sm">
+        <tbody class="bg-light">
+          <tr>
+            <th>Status</th>
+            <td>
+              <h5><span class="badge badge-secondary">{{orderbookStats.orderbookStatus}}</span></h5>
+            </td>
+            <th>Instrument</th>
+            <td>{{selectedBook.instrumentName}}</td>
+            <th>Execution Price</th>
+            <td>{{orderbookStats.executionPrice | number : 2}}</td>
+            <th>Execution Quantity</th>
+            <td>{{orderbookStats.executedQuantity | number : 2}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="row">
+      <div class="card mb-3 col-sm-6" id="statsCadAll">
+        <div class="card-header bg-secondary text-white">
+          <h6>Demands Statistics</h6>
+        </div>
+        <div class="card-body">
+          <table class="table table-condensed table-sm">
+            <tbody>
+              <tr>
+                <td>Org Demand for all orders</td>
+                <td>{{orderbookStats.orgDemand | number : 2}}</td>
+              </tr>
+              <tr>
+                <td>Open Demand for all orders</td>
+                <td>{{orderbookStats.openDemand | number : 2}}</td>
+              </tr>
+              <tr>
+                <td>Demand for Valid Orders</td>
+                <td>{{orderbookStats.orgDemandValid | number : 2}}</td>
+              </tr>
+              <tr>
+                <td>Demand for Invalid Orders</td>
+                <td>{{orderbookStats.orgDemandInvalid | number : 2}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="card mb-3 col-sm-6" id="statsCardOrders">
+        <div class="card-header bg-secondary text-white">
+          <h6>Orders Statistics</h6>
+        </div>
+        <div class="card-body">
+          <table class="table table-condensed table-sm">
+            <tbody>
+              <tr>
+                <td>Biggest Order</td>
+                <td>{{orderbookStats.biggestOrder.orderQuantity | number : 2}} @
+                  {{orderbookStats.biggestOrder.orderPrice | number : 2}}</td>
+              </tr>
+              <tr>
+                <td>Smallest Order</td>
+                <td>{{orderbookStats.smallestOrder.orderQuantity | number : 2}} @
+                  {{orderbookStats.smallestOrder.orderPrice | number : 2}}</td>
+              </tr>
+              <tr>
+                <td>First Order</td>
+                <td>{{orderbookStats.firstOrder.orderQuantity | number : 2}} @
+                  {{orderbookStats.firstOrder.orderPrice | number : 2}}</td>
+              </tr>
+              <tr>
+                <td>Last Order</td>
+                <td>{{orderbookStats.lastOrder.orderQuantity | number : 2}} @
+                  {{orderbookStats.lastOrder.orderPrice | number : 2}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="card  mb-3 col-sm-4" id="limitBrkAll">
+        <div class="card-header bg-secondary text-white">
+          <h6>Limit Breakdown for All Orders</h6>
+        </div>
+        <div class="card-body table-responsive overflow-y:auto;">
+          <table class="table table-striped table-condensed table-sm">
+            <thead>
+              <tr>
+                <th class="text-right">Price</th>
+                <th class="text-right">Quantity</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="(p, q) in orderbookStats.limitBreakdown">
+                <td class="num-col">{{p | number : 2}}</td>
+                <td class="num-col">{{q | number : 2}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="card  mb-3 col-sm-4" id="limitBrkValid">
+        <div class="card-header bg-secondary text-white ">
+          <h6>Limit Breakdown for Valid Orders</h6>
+        </div>
+        <div class="card-body table-responsive overflow-y:auto;">
+          <table class="table table-striped table-condensed table-sm">
+            <thead>
+              <tr>
+                <th class="text-right">Price</th>
+                <th class="text-right">Quantity</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="(p, q) in orderbookStats.limitBreakdownValid">
+                <td class="num-col">{{p | number : 2}}</td>
+                <td class="num-col">{{q | number : 2}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="card  mb-3 col-sm-4" id="limitBrkInvalid">
+        <div class="card-header bg-secondary text-white">
+          <h6>Limit Breakdown for Invalid Orders</h6>
+        </div>
+        <div class="card-body table-responsive overflow-y:auto;">
+          <table class="table table-striped table-condensed table-sm">
+            <thead>
+              <tr>
+                <th class="text-right">Price</th>
+                <th class="text-right">Quantity</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="(p, q) in orderbookStats.limitBreakdownInvalid">
+                <td class="num-col">{{p | number : 2}}</td>
+                <td class="num-col">{{q | number : 2}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
